@@ -2,6 +2,9 @@ const { ethers } = require("hardhat");
 
 const { expect } = require("chai");
 
+const toWei = (num) => ethers.utils.parseEther(num.toString())
+const fromWei = (num) => ethers.utils.formatEther(num)
+
 describe("NFTMarketplace", function(){
     let deployer, addr1, addr2, nft, marketplace
     let feePercent = 1
@@ -37,5 +40,48 @@ describe("NFTMarketplace", function(){
             expect(await nft.balanceOf(addr1.address)).to.equal(1);
             expect(await nft.tokenURI(2)).to.equal(URI);
         })
+    })
+
+    describe("Making marketplace Items", function(){
+        beforeEach(async function(){
+            await nft.connect(addr1).mint(URI)
+            await nft.connect(addr1).setApprovalForAll(marketplace.address, true)
+        })
+        it("should track each marketplace item", async function(){
+            await expect(marketplace.connect(addr1).makeItems(nft.address, 1, toWei(1)))
+            .to.emit(marketplace, "Offered")
+            .withArgs(
+                1,
+                nft.address,
+                1,
+                toWei(1),
+                addr1.address,
+            )
+            // owner of NFT should be marketplace
+            expect(await nft.ownerOf(1)).to.equal(marketplace.address);
+            // marketplace should have 1 item
+            expect(await marketplace.itemCount()).to.equal(1);
+
+            // get item from items mapping then check each field to make sure they are correct
+            const item = await marketplace.items(1)
+            expect(item.itemId).to.equal(1)
+            expect(item.nft).to.equal(nft.address)
+            expect(item.tokenId).to.equal(1)
+            expect(item.price).to.equal(toWei(1))
+            expect(item.sold).to.equal(false)
+
+        });
+    });
+
+    describe("Buying marketplace Items", function(){
+        beforeEach(async function(){
+            await nft.connect(addr1).mint(URI)
+            await nft.connect(addr1).setApprovalForAll(marketplace.address, true)
+            await marketplace.connect(addr1).makeItems(nft.address, 1, toWei(price))
+        })
+        it("shoudl track each purchase", async function(){
+            const sellerInitialEthbal = await addr1.getBalance()
+            const feeAccountInistialEthbal = await deployer.getBalance()
+            // totalPriceInWei = awai
     })
 })
