@@ -27,6 +27,7 @@ contract Marketplace is ReentrancyGuard{
     }
 
     function makeItems(IERC721 _nft, uint _tokenID, uint price ) external nonReentrant{
-        require(_price)
+        require(_price >0, "Price must be greater than 0");
+        
     }
 }
