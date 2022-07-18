@@ -73,15 +73,32 @@ describe("NFTMarketplace", function(){
         });
     });
 
-    describe("Buying marketplace Items", function(){
-        beforeEach(async function(){
-            await nft.connect(addr1).mint(URI)
-            await nft.connect(addr1).setApprovalForAll(marketplace.address, true)
-            await marketplace.connect(addr1).makeItems(nft.address, 1, toWei(price))
-        })
-        it("shoudl track each purchase", async function(){
-            const sellerInitialEthbal = await addr1.getBalance()
-            const feeAccountInistialEthbal = await deployer.getBalance()
-            // totalPriceInWei = awai
-    })
+    // describe("Buying marketplace Items", function(){
+    //     beforeEach(async function(){
+    //         await nft.connect(addr1).mint(URI)
+    //         await nft.connect(addr1).setApprovalForAll(marketplace.address, true)
+    //         await marketplace.connect(addr1).makeItems(nft.address, 1, toWei(price))
+    //     })
+    //     it("shoudl track each purchase", async function(){
+    //         const sellerInitialEthbal = await addr1.getBalance()
+    //         const feeAccountInistialEthbal = await deployer.getBalance()
+    //         let totalPriceInWei = await marketplace.getTotalPrice(1);
+
+    //         await expect(marketplace.connect(addr2)).purchaseItem(1, {value: totalPriceInWei})
+    //         .to.emit(marketplace, "Bought")
+    //         .withArgs(
+    //             1,
+    //             nft.address,
+    //             1,
+    //             toWei(price),
+    //             addr1.address,
+    //             addr2.address,
+    //         )
+            // const sellerInitialEthbalAfter = await addr1.getBalance()
+            // const feeAccountInistialEthbalAfter = await deployer.getBalance()
+            // // seller should receive payment
+            
+            // });    
+
+    // })
 })
